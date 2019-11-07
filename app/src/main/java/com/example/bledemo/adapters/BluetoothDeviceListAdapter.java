@@ -27,7 +27,7 @@ import java.util.List;
 public class BluetoothDeviceListAdapter extends ArrayAdapter<ScanResult> {
     private final Context context;
     private MainActivity mainActivity;
-    private List<ScanResult> scanResultList;
+    public List<ScanResult> scanResultList;
 
     public BluetoothDeviceListAdapter(@NonNull Context context, List<ScanResult> scanResultList, MainActivity mainActivity) {
         super(context, R.layout.device_list_item,scanResultList);

@@ -182,7 +182,9 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
                     ListView listView=(ListView)findViewById(R.id.devices_list_id);
                     BluetoothDeviceListAdapter adapter=new BluetoothDeviceListAdapter(getApplicationContext(),bleManager.scanResults,mainActivity);
                     listView.setAdapter(adapter);
-
+                    for(int i = 0; i < adapter.scanResultList.size(); i++){
+                        System.out.println("Device: "+adapter.scanResultList.get(i).getDevice() + "; " + "Device Name: " + adapter.scanResultList.get(i).getDevice().getName() + "; " + "Signal: " +adapter.scanResultList.get(i).getRssi()+"dBm");
+                    }
                 }catch (Exception error){
 
                 }
