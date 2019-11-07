@@ -70,7 +70,7 @@ public class Servicios extends Fragment {
 
     private ListView lv1;
     private TextView tv1;
-    private String servicios[]={"Servicio 1"," Servicio 2","Servicio 3"};
+    private String servicios[];
 
     private View v;
     @Override
@@ -84,6 +84,7 @@ public class Servicios extends Fragment {
         //Recibir datos
         Bundle datosRecuperados = getArguments();
         String dispositivo = datosRecuperados.getString("dispositivo");
+        servicios=datosRecuperados.getStringArray("servicios");
         tv1.setText("Servicios de "+dispositivo);
 
         //LLenar la lista de servicios
@@ -98,6 +99,10 @@ public class Servicios extends Fragment {
                 //Guardar el servicio seleccionado
                 Bundle datosAEnviar = new Bundle();
                 datosAEnviar.putString("servicio", servicios[i]);
+
+                //LLenar el array las caracteristicas del servicio seleccionado
+                String caracteristicas[]={"Caracteristica 1"," Caracteristica 2","Caracteristica 3", "Caracteristica 4", "Caracteristica 5"};
+                datosAEnviar.putStringArray("caracteristicas", caracteristicas);
 
                 //Inicializar el fragment de caracteristicas y mandar los datos
                 Caracteristicas frCaracteristicas = new Caracteristicas();

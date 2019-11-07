@@ -33,11 +33,19 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements BLEManagerCallerInterface, Dispositivos.OnFragmentInteractionListener,
-        Servicios.OnFragmentInteractionListener, Caracteristicas.OnFragmentInteractionListener {
+        Servicios.OnFragmentInteractionListener ,Caracteristicas.OnFragmentInteractionListener, InfoCaracteristica.OnFragmentInteractionListener {
 
     public BLEManager bleManager;
     private MainActivity mainActivity;
 
+
+    Dispositivos frDispositivos = new Dispositivos();
+
+String dispSelec;
+public void dispSelec(String ds){
+    dispSelec=ds;
+
+}
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
         conectarse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                System.out.println("EL DISPOSITIVO SELECCIONADO ES: "+dispSelec);
                 if(bleManager!=null){
 
                 }
@@ -119,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
         //Deshabilitar el BLE
         //bleManager.disable();
 
-        Dispositivos frDispositivos = new Dispositivos();
+
         FragmentTransaction transition =  getSupportFragmentManager().beginTransaction();
         transition.replace(R.id.contenedor,frDispositivos);
         transition.commit();
@@ -127,12 +136,14 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
 
     }
 
-    @Override
-    /*public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }*/
+
+
+    /* @Override
+     public boolean onCreateOptionsMenu(Menu menu) {
+         // Inflate the menu; this adds items to the action bar if it is present.
+         getMenuInflater().inflate(R.menu.menu_main, menu);
+         return true;
+     }*/
     public void onStop() {
         super.onStop();
 

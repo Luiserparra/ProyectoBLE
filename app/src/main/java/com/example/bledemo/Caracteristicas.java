@@ -69,7 +69,7 @@ public class Caracteristicas extends Fragment {
 
     private ListView lv1;
     private TextView tv1;
-    private String caracteristicas[]={"Caracteristica 1"," Caracteristica 2","Caracteristica 3", "Caracteristica 4", "Caracteristica 5"};
+    private String caracteristicas[];
 
     private View v;
     @Override
@@ -84,6 +84,7 @@ public class Caracteristicas extends Fragment {
         //Recibir datos
         Bundle datosRecuperados = getArguments();
         String servicio = datosRecuperados.getString("servicio");
+        caracteristicas= datosRecuperados.getStringArray("caracteristicas");
         tv1.setText("Servicios de "+servicio);
 
         //LLenar la lista de Caracteristicas
@@ -93,7 +94,23 @@ public class Caracteristicas extends Fragment {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                System.out.println("HHHHHHHHHHHHHHHHHHHHH");
+
+                //Guardar caracteristica seleccionada
+                Bundle datosAEnviar = new Bundle();
+                datosAEnviar.putString("servicio", caracteristicas[i]);
+
+                //LLenar el array las caracteristicas del servicio seleccionado
+                String caracteristicas[]={"Caracteristica 1"," Caracteristica 2","Caracteristica 3", "Caracteristica 4", "Caracteristica 5"};
+                datosAEnviar.putStringArray("caracteristicas", caracteristicas);
+
+                //Inicializar el fragment de caracteristicas y mandar los datos
+                Caracteristicas frCaracteristicas = new Caracteristicas();
+                frCaracteristicas.setArguments(datosAEnviar);
+
+                //Cambiar de fragment
+                FragmentTransaction transition = getFragmentManager().beginTransaction();
+                transition.replace(R.id.contenedor, frCaracteristicas);
+                transition.commit();
 
                 return false;
             }
