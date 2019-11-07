@@ -141,7 +141,6 @@ public class BLEManager extends ScanCallback {
             scanResults.add(result);
         }
         caller.newDeviceDetected();
-
     }
 
     @Override
