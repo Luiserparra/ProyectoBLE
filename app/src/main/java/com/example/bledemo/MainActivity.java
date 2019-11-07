@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
     public String [] Devices;
 
 
-    Dispositivos frDispositivos = new Dispositivos();
+
 
 String dispSelec;
 public void dispSelec(String ds){
@@ -129,8 +129,13 @@ public void dispSelec(String ds){
         //Deshabilitar el BLE
         //bleManager.disable();
 
+        Bundle datosAEnviar = new Bundle();
+        System.out.println("DISPOSITIVOOOS"+Devices);
+        datosAEnviar.putStringArray("Devices", Devices);
 
         FragmentTransaction transition =  getSupportFragmentManager().beginTransaction();
+        Dispositivos frDispositivos = new Dispositivos();
+        frDispositivos.setArguments(datosAEnviar);
         transition.replace(R.id.contenedor,frDispositivos);
         transition.commit();
 

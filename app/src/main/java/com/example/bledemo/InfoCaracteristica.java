@@ -9,6 +9,9 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 
 
 /**
@@ -62,11 +65,27 @@ public class InfoCaracteristica extends Fragment {
         }
     }
 
+    private ListView lv1;
+    private TextView tv1;
+    private View v;
+    private String info[];
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_info_caracteristica, container, false);
+        v = inflater.inflate(R.layout.fragment_info_caracteristica, container, false);
+        lv1=v.findViewById(R.id.lsInfoCaracteristica);
+        tv1=v.findViewById(R.id.txtInfoCaract);
+        //Recibir datos
+        Bundle datosRecuperados = getArguments();
+        String caracteristica = datosRecuperados.getString("caracteristica");
+        info= datosRecuperados.getStringArray("info");
+tv1.setText("Informacion de "+caracteristica);
+        //LLenar la lista con los datos
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, info);
+        lv1.setAdapter(adapter);
+
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

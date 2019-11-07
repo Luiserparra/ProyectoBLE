@@ -85,7 +85,7 @@ public class Caracteristicas extends Fragment {
         Bundle datosRecuperados = getArguments();
         String servicio = datosRecuperados.getString("servicio");
         caracteristicas= datosRecuperados.getStringArray("caracteristicas");
-        tv1.setText("Servicios de "+servicio);
+        tv1.setText("Caracteristicas de "+servicio);
 
         //LLenar la lista de Caracteristicas
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, caracteristicas);
@@ -97,14 +97,19 @@ public class Caracteristicas extends Fragment {
 
                 //Guardar caracteristica seleccionada
                 Bundle datosAEnviar = new Bundle();
-                datosAEnviar.putString("servicio", caracteristicas[i]);
+                datosAEnviar.putString("caracteristica", caracteristicas[i]);
 
-                //LLenar el array las caracteristicas del servicio seleccionado
-                String caracteristicas[]={"Caracteristica 1"," Caracteristica 2","Caracteristica 3", "Caracteristica 4", "Caracteristica 5"};
-                datosAEnviar.putStringArray("caracteristicas", caracteristicas);
+                //LLenar el array la info de la catacertistica seleccionada
+                String UUID="12345";
+                String Re="R";
+                String W="W";
+                String N="N";
+                String descriptor="Descripcion";
+                String info[]={"UUIDS: "+UUID,Re,W,N,"Descripción: "+descriptor };
+                datosAEnviar.putStringArray("info", info);
 
                 //Inicializar el fragment de caracteristicas y mandar los datos
-                Caracteristicas frCaracteristicas = new Caracteristicas();
+                InfoCaracteristica frCaracteristicas = new InfoCaracteristica();
                 frCaracteristicas.setArguments(datosAEnviar);
 
                 //Cambiar de fragment

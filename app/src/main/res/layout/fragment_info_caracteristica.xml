@@ -8,8 +8,17 @@
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:id="@+id/txtInfoCaract"
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/hello_blank_fragment" />
+
+    <ListView
+        android:id="@+id/lsInfoCaracteristica"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="40dp" />
 
 </FrameLayout>

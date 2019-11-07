@@ -100,7 +100,7 @@ public class Servicios extends Fragment {
                 Bundle datosAEnviar = new Bundle();
                 datosAEnviar.putString("servicio", servicios[i]);
 
-                //LLenar el array las caracteristicas del servicio seleccionado
+                //LLenar el array las caracteristicas del servicioleccionado
                 String caracteristicas[]={"Caracteristica 1"," Caracteristica 2","Caracteristica 3", "Caracteristica 4", "Caracteristica 5"};
                 datosAEnviar.putStringArray("caracteristicas", caracteristicas);
 

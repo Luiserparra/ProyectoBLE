@@ -92,8 +92,10 @@ private DispositivoSeleccionado dispSelec;
 
         v=inflater.inflate(R.layout.fragment_dispositivos, container, false);
         lv1=v.findViewById(R.id.lsDispositivos);
-
-        //LLenar la lista de sipositivos
+        //Recibir datos
+        Bundle datosRecuperados = getArguments();
+        dispositivos = datosRecuperados.getStringArray("Devices");
+        //LLenar la lista de dispositivos
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, dispositivos);
         lv1.setAdapter(adapter);
         System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
