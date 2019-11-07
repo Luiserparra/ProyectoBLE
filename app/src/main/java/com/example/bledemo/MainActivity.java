@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
 
     public BLEManager bleManager;
     private MainActivity mainActivity;
+    public String [] Devices;
 
 
     Dispositivos frDispositivos = new Dispositivos();
@@ -105,7 +106,7 @@ public void dispSelec(String ds){
                     FragmentTransaction transition =  getSupportFragmentManager().beginTransaction();
                     transition.replace(R.id.contenedor,frDispositivos);
                     transition.commit();
-                    bleManager.scanDevices();
+                    hilo.start();
                 }
             }
         });
@@ -242,8 +243,11 @@ public void dispSelec(String ds){
                     ListView listView=(ListView)findViewById(R.id.devices_list_id);
                     BluetoothDeviceListAdapter adapter=new BluetoothDeviceListAdapter(getApplicationContext(),bleManager.scanResults,mainActivity);
                     listView.setAdapter(adapter);
-                    for(int i = 0; i < adapter.scanResultList.size(); i++){
-                        System.out.println("Device: "+adapter.scanResultList.get(i).getDevice() + "; " + "Device Name: " + adapter.scanResultList.get(i).getDevice().getName() + "; " + "Signal: " +adapter.scanResultList.get(i).getRssi()+"dBm");
+                    Devices = new String[adapter.scanResultList.size()];
+                    for(int i = 0; i < adapter.scanResultList.size(); i++) {
+                        String d = "Device: " + adapter.scanResultList.get(i).getDevice() + "; " + "Device Name: " + adapter.scanResultList.get(i).getDevice().getName() + "; " + "Signal: " + adapter.scanResultList.get(i).getRssi() + "dBm";
+                        Devices[i] = d;
+                        System.out.println(d);
                     }
 //                    ListView listView=(ListView)findViewById(R.id.devices_list_id);
      //               BluetoothDeviceListAdapter adapter=new BluetoothDeviceListAdapter(getApplicationContext(),bleManager.scanResults,mainActivity);
@@ -290,4 +294,19 @@ public void dispSelec(String ds){
     public void onFragmentInteraction(Uri uri) {
 
     }
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            while (true) {
+                try {
+                    System.out.println("Me imprimo cada 5 segundos");
+                    bleManager.scanDevices();
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    };
+    Thread hilo = new Thread(runnable);
 }
