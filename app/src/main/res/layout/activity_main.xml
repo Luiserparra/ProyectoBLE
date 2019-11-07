@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:fab_icon="@android:drawable/ic_menu_view"
-            app:fab_size="normal"
+            app:fab_size="mini"
             app:fab_colorNormal="#6c8d19"
             app:fab_colorPressed="@android:color/darker_gray"
             app:fab_title="Empezar escaneo"
@@ -52,7 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:fab_icon="@android:drawable/ic_lock_power_off"
-            app:fab_size="normal"
+            app:fab_size="mini"
             app:fab_colorNormal="#F44336"
             app:fab_colorPressed="@android:color/darker_gray"
             app:fab_title="Detener Escaneo"
@@ -65,7 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:fab_icon="@android:drawable/ic_media_play"
-            app:fab_size="normal"
+            app:fab_size="mini"
             app:fab_colorNormal="#4CAF50"
             app:fab_colorPressed="@android:color/darker_gray"
             app:fab_title="Conectar dispositivo BLE"
@@ -77,10 +77,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:fab_icon="@android:drawable/ic_input_delete"
-            app:fab_size="normal"
+            app:fab_size="mini"
             app:fab_colorNormal="#FF5722"
             app:fab_colorPressed="@android:color/darker_gray"
-
             app:fab_title="Desconectarse del dispositivo BLE"
             >
 

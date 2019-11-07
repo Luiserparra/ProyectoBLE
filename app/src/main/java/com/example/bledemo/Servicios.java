@@ -89,6 +89,7 @@ public class Servicios extends Fragment {
         //LLenar la lista de servicios
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, servicios);
         lv1.setAdapter(adapter);
+
         lv1.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {

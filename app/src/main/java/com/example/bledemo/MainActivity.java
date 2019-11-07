@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
         });
 
         //BOTON DE DETENER ESCANEO
-        FloatingActionButton detenerScna = (FloatingActionButton) findViewById(R.id.fab1);
+        FloatingActionButton detenerScna = (FloatingActionButton) findViewById(R.id.fab2);
         detenerScna.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
         });
 
         //BOTON DE CONECTARSE A DISPOSITIVO
-        FloatingActionButton conectarse = (FloatingActionButton) findViewById(R.id.fab1);
+        FloatingActionButton conectarse = (FloatingActionButton) findViewById(R.id.fab3);
         conectarse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
         });
 
         //BOTON DE DESCONECTARSE A DISPOSITIVO
-        FloatingActionButton desconectarse = (FloatingActionButton) findViewById(R.id.fab1);
+        FloatingActionButton desconectarse = (FloatingActionButton) findViewById(R.id.fab4);
         desconectarse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

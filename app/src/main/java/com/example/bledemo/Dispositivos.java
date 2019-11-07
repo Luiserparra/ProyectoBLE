@@ -9,9 +9,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
+import static android.widget.Toast.LENGTH_LONG;
 
 
 /**
@@ -84,10 +87,13 @@ public class Dispositivos extends Fragment {
         //LLenar la lista de sipositivos
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, dispositivos);
         lv1.setAdapter(adapter);
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
         lv1.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
             if (conectado) {
+
+
                 //Guardar el dispositivo seleccionado
                 Bundle datosAEnviar = new Bundle();
                 datosAEnviar.putString("dispositivo", dispositivos[i]);
@@ -104,9 +110,22 @@ public class Dispositivos extends Fragment {
                 return false;
             }
         });
+        lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+            }
+
+
+
+        });
+
+
         return v;
     }
+    public void conectarse(){
 
+    }
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
