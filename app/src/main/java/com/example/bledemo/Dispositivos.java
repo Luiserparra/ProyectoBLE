@@ -94,7 +94,7 @@ private DispositivoSeleccionado dispSelec;
         lv1=v.findViewById(R.id.lsDispositivos);
         //Recibir datos
         Bundle datosRecuperados = getArguments();
-        dispositivos = datosRecuperados.getStringArray("Devices");
+       // dispositivos = datosRecuperados.getStringArray("Devices");
         //LLenar la lista de dispositivos
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, dispositivos);
         lv1.setAdapter(adapter);
@@ -120,6 +120,8 @@ private DispositivoSeleccionado dispSelec;
                 //Cambiar de fragment
                 FragmentTransaction transition = getFragmentManager().beginTransaction();
                 transition.replace(R.id.contenedor, frServicios);
+                transition.addToBackStack(null);
+
                 transition.commit();
             }
                 return false;

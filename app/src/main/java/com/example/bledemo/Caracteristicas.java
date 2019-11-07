@@ -99,10 +99,14 @@ public class Caracteristicas extends Fragment {
                 Bundle datosAEnviar = new Bundle();
                 datosAEnviar.putString("caracteristica", caracteristicas[i]);
 
+                //Eniar la caracteristica seleccionada
+                String ClaseCaract = "";//supongo que la caracteristica es una clase y se puede enviar como un dato
+                datosAEnviar.putString("ClaseCaract", ClaseCaract);
+
                 //LLenar el array la info de la catacertistica seleccionada
                 String UUID="12345";
-                String Re="R";
-                String W="W";
+                String Re="Leible";
+                String W="Ediable";
                 String N="N";
                 String descriptor="Descripcion";
                 String info[]={"UUIDS: "+UUID,Re,W,N,"Descripción: "+descriptor };
@@ -115,6 +119,7 @@ public class Caracteristicas extends Fragment {
                 //Cambiar de fragment
                 FragmentTransaction transition = getFragmentManager().beginTransaction();
                 transition.replace(R.id.contenedor, frCaracteristicas);
+                transition.addToBackStack(null);
                 transition.commit();
 
                 return false;

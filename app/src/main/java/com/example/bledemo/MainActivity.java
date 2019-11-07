@@ -24,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.view.View;
@@ -63,6 +64,8 @@ public void dispSelec(String ds){
                     Dispositivos frDispositivos = new Dispositivos();
                     FragmentTransaction transition =  getSupportFragmentManager().beginTransaction();
                     transition.replace(R.id.contenedor,frDispositivos);
+                    transition.addToBackStack(null);
+
                     transition.commit();
                     bleManager.scanDevices();
                 }
@@ -142,7 +145,18 @@ public void dispSelec(String ds){
 
     }
 
+    @Override
+    public void onBackPressed(){
 
+            FragmentManager manager = getSupportFragmentManager();
+            if(manager.getBackStackEntryCount() > 0 ) {
+                manager.popBackStack();//Pops one of the added fragments
+            }
+
+        else {
+            super.onBackPressed();
+        }
+    }
 
     /* @Override
      public boolean onCreateOptionsMenu(Menu menu) {

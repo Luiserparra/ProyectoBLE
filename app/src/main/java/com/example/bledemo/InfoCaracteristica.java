@@ -1,6 +1,9 @@
 package com.example.bledemo;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -9,7 +12,9 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -67,6 +72,7 @@ public class InfoCaracteristica extends Fragment {
 
     private ListView lv1;
     private TextView tv1;
+    private EditText nuevoValET;
     private View v;
     private String info[];
     @Override
@@ -78,13 +84,62 @@ public class InfoCaracteristica extends Fragment {
         tv1=v.findViewById(R.id.txtInfoCaract);
         //Recibir datos
         Bundle datosRecuperados = getArguments();
-        String caracteristica = datosRecuperados.getString("caracteristica");
+        final String caracteristica = datosRecuperados.getString("caracteristica");
+        String ClaseCaract= datosRecuperados.getString("ClaseCaract");
+        final String ValorCaracteristica="El valor de la caracteristica";
         info= datosRecuperados.getStringArray("info");
-tv1.setText("Informacion de "+caracteristica);
+        tv1.setText("Informacion de "+caracteristica);
         //LLenar la lista con los datos
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, info);
         lv1.setAdapter(adapter);
+        lv1.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (i==1 && info[1].equals("Leible")){
+                    //POP UP PARA LEER LA CARACTERISTICA
+                    AlertDialog.Builder builder =new AlertDialog.Builder(getActivity());
+                    builder.setCancelable(true);
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.cancel();
+                        }
+                    });
+                    builder.setTitle(caracteristica);
+                    builder.setMessage(ValorCaracteristica);
+                    builder.show();
+                }else {
+                    if (i==2 && info[2].equals("Ediable")){
+                        AlertDialog.Builder builder =new AlertDialog.Builder(getActivity());
+                        LayoutInflater inflater1 =getActivity().getLayoutInflater();
+                        View view1=inflater1.inflate(R.layout.write_dialog,null);
+                        nuevoValET=view1.findViewById(R.id.nuevoVal);
 
+                        builder.setCancelable(true);
+                        builder.setView(view1);
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                final String nuevoVal=nuevoValET.getText().toString();
+                                System.out.println("NUEVO VAL: "+nuevoVal);
+                                //SETEAR EL nuevoVal A LA CARACTERISTICA
+                            }
+                        });
+                        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.cancel();
+                            }
+                        });
+                        builder.setTitle("Nuevo valor");
+
+                        builder.show();
+                    }
+                }
+
+                return false;
+            }
+        });
         return v;
     }
 

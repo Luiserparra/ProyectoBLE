@@ -64,7 +64,9 @@ public class Servicios extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        setHasOptionsMenu(true);
     }
+
 
 
 
@@ -111,6 +113,7 @@ public class Servicios extends Fragment {
                 //Cambiar de fragment
                 FragmentTransaction transition = getFragmentManager().beginTransaction();
                 transition.replace(R.id.contenedor, frCaracteristicas);
+                transition.addToBackStack(null);
                 transition.commit();
 
                 return false;
