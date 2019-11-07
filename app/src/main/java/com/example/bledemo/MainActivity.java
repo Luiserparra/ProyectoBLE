@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.example.bledemo.adapters.BluetoothDeviceListAdapter;
@@ -21,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.View;
 import android.view.Menu;
@@ -28,7 +30,8 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements BLEManagerCallerInterface {
+public class MainActivity extends AppCompatActivity implements BLEManagerCallerInterface, Dispositivos.OnFragmentInteractionListener,
+        Servicios.OnFragmentInteractionListener, Caracteristicas.OnFragmentInteractionListener {
 
     public BLEManager bleManager;
     private MainActivity mainActivity;
@@ -66,14 +69,21 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
         registerReceiver(mReceiver, filter);
         //Deshabilitar el BLE
         //bleManager.disable();
+
+        Dispositivos frServicios = new Dispositivos();
+        FragmentTransaction transition =  getSupportFragmentManager().beginTransaction();
+        transition.replace(R.id.contenedor,frServicios);
+        transition.commit();
+
+
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    /*public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
-    }
+    }*/
     public void onStop() {
         super.onStop();
 
@@ -210,4 +220,9 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
             }
         }
     };
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
 }

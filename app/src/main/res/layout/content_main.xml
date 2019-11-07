@@ -8,10 +8,16 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <ListView
+    <FrameLayout
+        android:id="@+id/contenedor"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent">
+
+    </FrameLayout>
+
+    <ListView
         android:id="@+id/devices_list_id"
-        ></ListView>
+        android:layout_width="match_parent"
+        android:layout_height="445dp"></ListView>
 
 </LinearLayout>
