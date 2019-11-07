@@ -15,7 +15,8 @@ import android.os.Bundle;
 import com.example.bledemo.adapters.BluetoothDeviceListAdapter;
 import com.example.bledemo.ble.BLEManager;
 import com.example.bledemo.ble.BLEManagerCallerInterface;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
@@ -43,21 +44,68 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+        //BOTON DE INICIAR ESCANEO
+        FloatingActionButton iniciarScan = (FloatingActionButton) findViewById(R.id.fab1);
+        iniciarScan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(bleManager!=null){
+                    Dispositivos frDispositivos = new Dispositivos();
+                    FragmentTransaction transition =  getSupportFragmentManager().beginTransaction();
+                    transition.replace(R.id.contenedor,frDispositivos);
+                    transition.commit();
+                    bleManager.scanDevices();
+                }
+            }
+        });
+
+        //BOTON DE DETENER ESCANEO
+        FloatingActionButton detenerScna = (FloatingActionButton) findViewById(R.id.fab1);
+        detenerScna.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(bleManager!=null){
+                    Dispositivos frDispositivos = new Dispositivos();
+                    FragmentTransaction transition =  getSupportFragmentManager().beginTransaction();
+                    transition.replace(R.id.contenedor,frDispositivos);
+                    transition.commit();
+                    bleManager.scanDevices();
+                }
+            }
+        });
+
+        //BOTON DE CONECTARSE A DISPOSITIVO
+        FloatingActionButton conectarse = (FloatingActionButton) findViewById(R.id.fab1);
+        conectarse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(bleManager!=null){
+
+                }
+            }
+        });
+
+        //BOTON DE DESCONECTARSE A DISPOSITIVO
+        FloatingActionButton desconectarse = (FloatingActionButton) findViewById(R.id.fab1);
+        desconectarse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(bleManager!=null){
+                    Dispositivos frDispositivos = new Dispositivos();
+                    FragmentTransaction transition =  getSupportFragmentManager().beginTransaction();
+                    transition.replace(R.id.contenedor,frDispositivos);
+                    transition.commit();
+                    bleManager.scanDevices();
+                }
+            }
+        });
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             Toast.makeText(this, "Su dispositivo no es compatible con el servicio BLE", Toast.LENGTH_LONG).show();
             finish();
         }else{
             Toast.makeText(this, "Su dispositivo es compatible con los serivicios BLE, Bienvenido", Toast.LENGTH_LONG).show();
         }
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(bleManager!=null){
-                    bleManager.scanDevices();
-                }
-            }
-        });
+
         bleManager=new BLEManager(this,this);
         if(!bleManager.isBluetoothOn()){
             bleManager.enableBluetoothDevice(this, 1001);
@@ -70,9 +118,9 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
         //Deshabilitar el BLE
         //bleManager.disable();
 
-        Dispositivos frServicios = new Dispositivos();
+        Dispositivos frDispositivos = new Dispositivos();
         FragmentTransaction transition =  getSupportFragmentManager().beginTransaction();
-        transition.replace(R.id.contenedor,frServicios);
+        transition.replace(R.id.contenedor,frDispositivos);
         transition.commit();
 
 
@@ -179,9 +227,9 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
             @Override
             public void run() {
                 try{
-                    ListView listView=(ListView)findViewById(R.id.devices_list_id);
-                    BluetoothDeviceListAdapter adapter=new BluetoothDeviceListAdapter(getApplicationContext(),bleManager.scanResults,mainActivity);
-                    listView.setAdapter(adapter);
+//                    ListView listView=(ListView)findViewById(R.id.devices_list_id);
+     //               BluetoothDeviceListAdapter adapter=new BluetoothDeviceListAdapter(getApplicationContext(),bleManager.scanResults,mainActivity);
+   //                 listView.setAdapter(adapter);
 
                 }catch (Exception error){
 
