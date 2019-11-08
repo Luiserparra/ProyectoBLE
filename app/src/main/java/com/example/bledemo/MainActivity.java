@@ -121,7 +121,7 @@ public void dispSelec(String ds){
             }
         });
 
-        //BOTON DE DESCONECTARSE A DISPOSITIVO
+        //BOTON DE DESCONECTARSE DE UN DISPOSITIVO
         FloatingActionButton desconectarse = (FloatingActionButton) findViewById(R.id.fab4);
         desconectarse.setOnClickListener(new View.OnClickListener() {
             @Override
