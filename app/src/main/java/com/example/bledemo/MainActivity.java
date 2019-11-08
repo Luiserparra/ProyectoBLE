@@ -3,6 +3,8 @@ package com.example.bledemo;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.le.ScanResult;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,6 +17,7 @@ import android.os.Bundle;
 import com.example.bledemo.adapters.BluetoothDeviceListAdapter;
 import com.example.bledemo.ble.BLEManager;
 import com.example.bledemo.ble.BLEManagerCallerInterface;
+
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 //import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -39,8 +42,15 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
     public BLEManager bleManager;
     private MainActivity mainActivity;
     public String [] Devices;
+    public volatile boolean run = true;
 
-
+    public void go(){
+        run = true;
+        hilo.start();
+    }
+    public void stop(){
+        run = false;
+    }
 
 
 String dispSelec="";
@@ -67,7 +77,7 @@ public void dispSelec(String ds){
                     transition.addToBackStack(null);
                     System.out.println("INICIAR ESCANEO");
                     transition.commit();
-                    bleManager.scanDevices();
+                    go();
                 }
             }
         });
@@ -82,9 +92,9 @@ public void dispSelec(String ds){
                     FragmentTransaction transition =  getSupportFragmentManager().beginTransaction();
                     transition.replace(R.id.contenedor,frDispositivos);
                     System.out.println("DETENER ESCANEO");
-
                     transition.commit();
-                    bleManager.scanDevices();
+                    stop();
+                    System.out.println("Mate a potter :'(");
                 }
             }
         });
@@ -114,8 +124,17 @@ public void dispSelec(String ds){
                         FragmentTransaction transition = getSupportFragmentManager().beginTransaction();
                         transition.replace(R.id.contenedor, frServicios);
                         transition.addToBackStack(null);
-
                         transition.commit();
+                        BluetoothDevice device = null;
+                        for(ScanResult sr : bleManager.scanResults){
+                            if (sr.getDevice().getName()!=null) {
+                                if (sr.getDevice().getName().equals("Galaxy S7 edge")) {
+                                    device = sr.getDevice();
+                                }
+                            }
+                        }
+                        bleManager.connectToGATTServer(device);
+
                     }
                 }
             }
@@ -132,8 +151,6 @@ public void dispSelec(String ds){
                     transition.replace(R.id.contenedor,frDispositivos);
                     transition.commit();
                     System.out.println("DESCONECTARSE");
-
-                    hilo.start();
                 }
             }
         });
@@ -283,14 +300,16 @@ public void dispSelec(String ds){
             @Override
             public void run() {
                 try{
-                    ListView listView=(ListView)findViewById(R.id.devices_list_id);
-                    BluetoothDeviceListAdapter adapter=new BluetoothDeviceListAdapter(getApplicationContext(),bleManager.scanResults,mainActivity);
-                    listView.setAdapter(adapter);
-                    Devices = new String[adapter.scanResultList.size()];
-                    for(int i = 0; i < adapter.scanResultList.size(); i++) {
-                        String d = "Device: " + adapter.scanResultList.get(i).getDevice() + "; " + "Device Name: " + adapter.scanResultList.get(i).getDevice().getName() + "; " + "Signal: " + adapter.scanResultList.get(i).getRssi() + "dBm";
-                        Devices[i] = d;
-                        System.out.println(d);
+                    if (run) {
+                        ListView listView = (ListView) findViewById(R.id.devices_list_id);
+                        BluetoothDeviceListAdapter adapter = new BluetoothDeviceListAdapter(getApplicationContext(), bleManager.scanResults, mainActivity);
+                        listView.setAdapter(adapter);
+                        Devices = new String[adapter.scanResultList.size()];
+                        for (int i = 0; i < adapter.scanResultList.size(); i++) {
+                            String d = "Device: " + adapter.scanResultList.get(i).getDevice() + "; " + "Device Name: " + adapter.scanResultList.get(i).getDevice().getName() + "; " + "Signal: " + adapter.scanResultList.get(i).getRssi() + "dBm";
+                            Devices[i] = d;
+                            System.out.println(d);
+                        }
                     }
 //                    ListView listView=(ListView)findViewById(R.id.devices_list_id);
      //               BluetoothDeviceListAdapter adapter=new BluetoothDeviceListAdapter(getApplicationContext(),bleManager.scanResults,mainActivity);
@@ -340,11 +359,12 @@ public void dispSelec(String ds){
     Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            while (true) {
+            while (run) {
                 try {
                     System.out.println("Me imprimo cada 5 segundos");
                     bleManager.scanDevices();
                     Thread.sleep(5000);
+                    System.out.println("EL valor de Run es "+run);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
