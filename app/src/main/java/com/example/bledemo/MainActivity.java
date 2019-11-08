@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
 
 
 
-String dispSelec;
+String dispSelec="";
 public void dispSelec(String ds){
     dispSelec=ds;
 
@@ -65,7 +65,7 @@ public void dispSelec(String ds){
                     FragmentTransaction transition =  getSupportFragmentManager().beginTransaction();
                     transition.replace(R.id.contenedor,frDispositivos);
                     transition.addToBackStack(null);
-
+                    System.out.println("INICIAR ESCANEO");
                     transition.commit();
                     bleManager.scanDevices();
                 }
@@ -81,6 +81,8 @@ public void dispSelec(String ds){
                     Dispositivos frDispositivos = new Dispositivos();
                     FragmentTransaction transition =  getSupportFragmentManager().beginTransaction();
                     transition.replace(R.id.contenedor,frDispositivos);
+                    System.out.println("DETENER ESCANEO");
+
                     transition.commit();
                     bleManager.scanDevices();
                 }
@@ -94,7 +96,27 @@ public void dispSelec(String ds){
             public void onClick(View view) {
                 System.out.println("EL DISPOSITIVO SELECCIONADO ES: "+dispSelec);
                 if(bleManager!=null){
+                    if (!dispSelec.equals("")) {
+                        //Guardar el dispositivo seleccionado
+                        Bundle datosAEnviar = new Bundle();
+                        datosAEnviar.putString("dispositivo", dispSelec);
+                        //LLenar el array de servicios con los servicios del dispositivo seleccionado
+                        String servicios[] = {"Servicio 1", " Servicio 2", "Servicio 3"};
+                        datosAEnviar.putStringArray("servicios", servicios);
 
+                        System.out.println("CONECTARSE");
+
+                        //Inicializar el fragment de servicios y mandar los datos
+                        Servicios frServicios = new Servicios();
+                        frServicios.setArguments(datosAEnviar);
+
+                        //Cambiar de fragment
+                        FragmentTransaction transition = getSupportFragmentManager().beginTransaction();
+                        transition.replace(R.id.contenedor, frServicios);
+                        transition.addToBackStack(null);
+
+                        transition.commit();
+                    }
                 }
             }
         });
@@ -109,6 +131,8 @@ public void dispSelec(String ds){
                     FragmentTransaction transition =  getSupportFragmentManager().beginTransaction();
                     transition.replace(R.id.contenedor,frDispositivos);
                     transition.commit();
+                    System.out.println("DESCONECTARSE");
+
                     hilo.start();
                 }
             }
