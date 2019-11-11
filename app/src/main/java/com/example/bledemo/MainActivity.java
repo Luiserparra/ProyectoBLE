@@ -128,13 +128,12 @@ public void dispSelec(String ds){
                         BluetoothDevice device = null;
                         for(ScanResult sr : bleManager.scanResults){
                             if (sr.getDevice().getName()!=null) {
-                                if (sr.getDevice().getName().equals("Galaxy S7 edge")) {
+                                if (sr.getDevice().getName().equals("Galaxy J5 METAL")) {
                                     device = sr.getDevice();
                                 }
                             }
                         }
                         bleManager.connectToGATTServer(device);
-
                     }
                 }
             }
@@ -151,6 +150,7 @@ public void dispSelec(String ds){
                     transition.replace(R.id.contenedor,frDispositivos);
                     transition.commit();
                     System.out.println("DESCONECTARSE");
+                    bleManager.disconnectToGattServer();
                 }
             }
         });
