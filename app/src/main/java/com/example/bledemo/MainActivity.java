@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
 
     public void go(){
         run = true;
-        hilo.start();
     }
     public void stop(){
         bleManager.stopScanDevices();
@@ -79,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
             public void onClick(View view) {
                 if(bleManager!=null){
                     System.out.println("INICIAR ESCANEO");
+                    bleManager.scanDevices();
                     go();
                 }
             }
@@ -129,9 +129,7 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
                             }
                         }
                         bleManager.connectToGATTServer(device);
-                        while(bleManager.getGatt()==null){}
-                        while(bleManager.getGatt().getServices()==null){}
-
+                        while(!bleManager.getSw()){}
                         //LLenar el array de servicios con los servicios del dispositivo seleccionado
 
                          servicios = new String[bleManager.getGatt().getServices().size()];
@@ -388,22 +386,7 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
     public void onFragmentInteraction(Uri uri) {
 
     }
-    Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            //while (run) {
-                try {
-                    System.out.println("Me imprimo cada 5 segundos");
-                    bleManager.scanDevices();
-                    Thread.sleep(10000);
-                    System.out.println("EL valor de Run es "+run);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            //}
-        }
-    };
-    Thread hilo = new Thread(runnable);
+
 
     public boolean alreadyExists(String[]a, String s){
         for (int i = 0; i<a.length;i++){
@@ -412,5 +395,9 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
             }
         }
         return false;
+    }
+
+    public BLEManager getBleManager() {
+        return bleManager;
     }
 }

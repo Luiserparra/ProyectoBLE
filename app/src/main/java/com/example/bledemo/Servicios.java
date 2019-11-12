@@ -1,5 +1,7 @@
 package com.example.bledemo;
 
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattService;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +15,10 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.example.bledemo.ble.BLEManager;
+
+import java.util.List;
 
 
 /**
@@ -102,8 +108,35 @@ public class Servicios extends Fragment {
                 Bundle datosAEnviar = new Bundle();
                 datosAEnviar.putString("servicio", servicios[i]);
 
-                //LLenar el array las caracteristicas del servicioleccionado
-                String caracteristicas[]={"Caracteristica 1"," Caracteristica 2","Caracteristica 3", "Caracteristica 4", "Caracteristica 5"};
+                //LLenar el array las caracteristicas del servicio seleccionado
+                MainActivity ma = (MainActivity)getActivity();
+                BLEManager bleManager = ma.getBleManager();
+                List <BluetoothGattService> services = bleManager.getGatt().getServices();
+                BluetoothGattService service = null;
+                for(BluetoothGattService s : services){
+                    if(servicios[i].equals(s.getUuid().toString())){
+                        service = s;
+                        break;
+                    }
+                }
+                List<BluetoothGattCharacteristic> characteristics = service.getCharacteristics();
+                String caracteristicas[]=new String[characteristics.size()];
+                int j = 0;
+                for (BluetoothGattCharacteristic c : characteristics){
+                    String carac;
+                    carac = c.getUuid().toString()+" ";
+                    if(isCharacteristicReadable(c)){
+                        carac = carac + "R";
+                    }
+                    if(isCharacteristicWriteable(c)){
+                        carac = carac + "W";
+                    }
+                    if(isCharacteristicNotifiable(c)){
+                        carac = carac + "N";
+                    }
+                    caracteristicas[j] = carac;
+                    j++;
+                }
                 datosAEnviar.putStringArray("caracteristicas", caracteristicas);
 
                 //Inicializar el fragment de caracteristicas y mandar los datos
@@ -159,5 +192,18 @@ public class Servicios extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+    public boolean isCharacteristicWriteable(BluetoothGattCharacteristic characteristic) {
+        return (characteristic.getProperties() &
+                (BluetoothGattCharacteristic.PROPERTY_WRITE
+                        | BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE)) != 0;
+    }
+
+    public boolean isCharacteristicReadable(BluetoothGattCharacteristic characteristic) {
+        return ((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_READ) != 0);
+    }
+
+    public boolean isCharacteristicNotifiable(BluetoothGattCharacteristic characteristic) {
+        return ((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0);
     }
 }

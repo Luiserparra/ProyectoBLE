@@ -40,6 +40,7 @@ public class BLEManager extends ScanCallback {
     private BluetoothLeScanner bluetoothLeScanner;
     public List<ScanResult> scanResults=new ArrayList<>();
     public BluetoothGatt gatt = null;
+    public boolean sw = false;
 
     public BLEManager(BLEManagerCallerInterface caller, Context context) {
         this.caller = caller;
@@ -198,11 +199,11 @@ public class BLEManager extends ScanCallback {
                                                     int status, int newState) {
                     super.onConnectionStateChange(gatt, status, newState);
                     if(newState==BluetoothGatt.STATE_CONNECTED){
-                        System.out.println("EL GATT DICE QUE ESTAS CONECTADO");
+                        sw = false;
                         gatt.discoverServices();
                     }
                 }
-                
+
                 @Override
                 public void onServicesDiscovered(BluetoothGatt gatt, int status) {
                     super.onServicesDiscovered(gatt, status);
@@ -233,6 +234,7 @@ public class BLEManager extends ScanCallback {
                                 }
                             }
                         }
+                        sw = true;
                     } else {
                     }
                 }
@@ -311,6 +313,10 @@ public class BLEManager extends ScanCallback {
 
     public BluetoothGatt getGatt(){
         return gatt;
+    }
+
+    public boolean getSw(){
+        return sw;
     }
 
 }
