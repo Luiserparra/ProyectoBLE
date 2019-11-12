@@ -82,10 +82,14 @@ public class Dispositivos extends Fragment {
     boolean conectado=true;
     public String a;
     private View v;
-private Dispositivos lisener;
-public interface DispositivoSeleccionado{
-    void onInputASent(String dispositivo);
-}
+    private Dispositivos lisener;
+    public interface DispositivoSeleccionado{
+        void onInputASent(String dispositivo);
+    }
+
+    public void dispSelec(String servicio){
+        servicio=servicio;
+    }
 private DispositivoSeleccionado dispSelec;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

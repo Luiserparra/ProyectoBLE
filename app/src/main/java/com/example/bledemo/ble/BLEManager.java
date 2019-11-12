@@ -25,6 +25,7 @@ import android.provider.Settings;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.example.bledemo.MainActivity;
 import com.example.bledemo.R;
 
 import java.util.ArrayList;
@@ -201,7 +202,7 @@ public class BLEManager extends ScanCallback {
                         gatt.discoverServices();
                     }
                 }
-
+                
                 @Override
                 public void onServicesDiscovered(BluetoothGatt gatt, int status) {
                     super.onServicesDiscovered(gatt, status);
@@ -306,6 +307,10 @@ public class BLEManager extends ScanCallback {
 
     public boolean isCharacteristicNotifiable(BluetoothGattCharacteristic characteristic) {
         return ((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0);
+    }
+
+    public BluetoothGatt getGatt(){
+        return gatt;
     }
 
 }

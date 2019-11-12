@@ -59,6 +59,12 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
     public void dispSelec(String ds){
         dispSelec=ds;
     }
+    String servicios[];
+    int p=0;
+    public void addServicio(String s){
+        servicios[p]=s;
+        p++;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,8 +128,16 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
                                 }
                             }
                         }
+                        bleManager.connectToGATTServer(device);
+                        while(bleManager.getGatt()==null){}
+                        while(bleManager.getGatt().getServices()==null){}
+
                         //LLenar el array de servicios con los servicios del dispositivo seleccionado
-                        String servicios[] = {"Servicio 1", " Servicio 2", "Servicio 3"};
+
+                         servicios = new String[bleManager.getGatt().getServices().size()];
+                        for (int i = 0; i<servicios.length;i++){
+                            servicios[i] = bleManager.getGatt().getServices().get(i).getUuid().toString();
+                        }
                         datosAEnviar.putStringArray("servicios", servicios);
 
                         System.out.println("CONECTARSE");
@@ -138,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
                         transition.addToBackStack(null);
                         transition.commit();
 
-                        bleManager.connectToGATTServer(device);
+
                     }
                 }
             }
