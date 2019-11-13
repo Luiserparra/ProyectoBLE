@@ -2,6 +2,7 @@ package com.example.bledemo;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.bluetooth.BluetoothGattCharacteristic;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
@@ -17,6 +18,11 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.example.bledemo.ble.BLEManager;
+
+import java.util.Arrays;
+import java.util.UUID;
 
 
 /**
@@ -75,6 +81,8 @@ public class InfoCaracteristica extends Fragment {
     private EditText nuevoValET;
     private View v;
     private String info[];
+    private String servicio="";
+    String ValorCaracteristica="";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -86,7 +94,8 @@ public class InfoCaracteristica extends Fragment {
         Bundle datosRecuperados = getArguments();
         final String caracteristica = datosRecuperados.getString("caracteristica");
         String ClaseCaract= datosRecuperados.getString("ClaseCaract");
-        final String ValorCaracteristica="El valor de la caracteristica";
+        servicio = datosRecuperados.getString("servicio");
+        ValorCaracteristica="El valor de la caracteristica";
         info= datosRecuperados.getStringArray("info");
         tv1.setText("Informacion de "+caracteristica);
         //LLenar la lista con los datos
@@ -106,6 +115,15 @@ public class InfoCaracteristica extends Fragment {
                         }
                     });
                     builder.setTitle(caracteristica);
+                    MainActivity ma = (MainActivity)getActivity();
+                    BLEManager bleManager = ma.getBleManager();
+                    BluetoothGattCharacteristic c = bleManager.getGatt().getService(UUID.fromString(servicio)).getCharacteristic(UUID.fromString(caracteristica));
+                    System.out.println("La caracteristica fue "+c.getUuid().toString());
+                    bleManager.setSw2(false);
+                    bleManager.getGatt().readCharacteristic(c);
+                    //while(!bleManager.getSw2()){}
+                    //int lsb = c.getValue()[0] & 0xff;
+                    //ValorCaracteristica = String.valueOf(lsb);
                     builder.setMessage(ValorCaracteristica);
                     builder.show();
                 }else {

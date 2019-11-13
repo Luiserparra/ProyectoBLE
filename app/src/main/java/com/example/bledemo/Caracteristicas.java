@@ -105,13 +105,13 @@ public class Caracteristicas extends Fragment {
 
                 //Guardar caracteristica seleccionada
                 Bundle datosAEnviar = new Bundle();
-                datosAEnviar.putString("caracteristica", caracteristicas[i]);
                 MainActivity ma = (MainActivity)getActivity();
                 BLEManager bleManager = ma.getBleManager();
                 BluetoothGattService s = bleManager.getGatt().getService(UUID.fromString(servicio));
                 List<BluetoothGattCharacteristic> c = s.getCharacteristics();
-                caracteristicas[i]= caracteristicas[i].substring(0,caracteristicas[i].length()-1);
-                BluetoothGattCharacteristic caracteristica = s.getCharacteristic(UUID.fromString(caracteristicas[i]));
+                String t= caracteristicas[i].substring(0,caracteristicas[i].length()-1);
+                datosAEnviar.putString("caracteristica", t);
+                BluetoothGattCharacteristic caracteristica = s.getCharacteristic(UUID.fromString(t));
                 //LLenar el array la info de la catacertistica seleccionada
                 String UUID=caracteristica.getUuid().toString();
                 String Re=(isCharacteristicReadable(caracteristica))?"R":"";
@@ -119,7 +119,7 @@ public class Caracteristicas extends Fragment {
                 String N=(isCharacteristicNotifiable(caracteristica))?"N":"";;
                 String info[]={"UUIDS: "+UUID,Re,W,N};
                 datosAEnviar.putStringArray("info", info);
-
+                datosAEnviar.putString("servicio",servicio);
                 //Inicializar el fragment de caracteristicas y mandar los datos
                 InfoCaracteristica frInfoCaract = new InfoCaracteristica();
                 frInfoCaract.setArguments(datosAEnviar);

@@ -41,6 +41,7 @@ public class BLEManager extends ScanCallback {
     public List<ScanResult> scanResults=new ArrayList<>();
     public BluetoothGatt gatt = null;
     public boolean sw = false;
+    public boolean sw2 = false;
 
     public BLEManager(BLEManagerCallerInterface caller, Context context) {
         this.caller = caller;
@@ -242,6 +243,9 @@ public class BLEManager extends ScanCallback {
                 @Override
                 public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
                     super.onCharacteristicRead(gatt, characteristic, status);
+                    int lsb = characteristic.getValue()[0] & 0xff;
+                    System.out.println(lsb);
+                    sw2 = true;
                 }
 
                 @Override
@@ -319,5 +323,8 @@ public class BLEManager extends ScanCallback {
     public boolean getSw(){
         return sw;
     }
+
+    public boolean getSw2(){return sw2;}
+    public void setSw2(boolean sw1){sw2=sw1;}
 
 }
