@@ -1,6 +1,13 @@
 package com.example.bledemo;
 
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattDescriptor;
+import android.bluetooth.BluetoothGattService;
+import android.bluetooth.le.ScanResult;
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -116,13 +123,41 @@ private DispositivoSeleccionado dispSelec;
             if (conectado) {
 
 
+                String dispSelec = dispositivos[i];
                 //Guardar el dispositivo seleccionado
                 Bundle datosAEnviar = new Bundle();
-                datosAEnviar.putString("dispositivo", dispositivos[i]);
+                String[]dispSelecV = dispSelec.split(" ");
+                int sw = 0;
+                for(int j = 0; j<dispSelecV.length;j++){
+                    if(dispSelecV[j].equals("MAC:")){
+                        sw = j+1;
+                        break;
+                    }
+                }
+                MainActivity ma = (MainActivity)getActivity();
+                BLEManager bleManager = ma.getBleManager();
+                dispSelec = dispSelecV[sw];
+                datosAEnviar.putString("dispositivo", dispSelec);
+                BluetoothDevice device = null;
+                for(ScanResult sr : bleManager.scanResults){
+                    if (sr.getDevice().getName()!=null) {
+                        if (sr.getDevice().toString().equals(dispSelec)) {
+                            device = sr.getDevice();
+                        }
+                    }
+                }
+                bleManager.connectToGATTServer(device);
+                while(!bleManager.getSw()){}
                 //LLenar el array de servicios con los servicios del dispositivo seleccionado
-                String servicios[]={"Servicio 1"," Servicio 2","Servicio 3"};
+                String [] servicios;
+                servicios = new String[bleManager.getGatt().getServices().size()];
+                for (int j = 0; j<servicios.length;j++){
+                    servicios[j] = bleManager.getGatt().getServices().get(j).getUuid().toString();
+                }
+                searchAndSetAllNotifyAbleCharacteristics(bleManager.getGatt());
                 datosAEnviar.putStringArray("servicios", servicios);
 
+                System.out.println("CONECTARSE");
 
                 //Inicializar el fragment de servicios y mandar los datos
                 Servicios frServicios = new Servicios();
@@ -132,8 +167,9 @@ private DispositivoSeleccionado dispSelec;
                 FragmentTransaction transition = getFragmentManager().beginTransaction();
                 transition.replace(R.id.contenedor, frServicios);
                 transition.addToBackStack(null);
-
                 transition.commit();
+
+
             }
                 return false;
             }
@@ -143,8 +179,6 @@ private DispositivoSeleccionado dispSelec;
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 MainActivity ma= (MainActivity)getActivity();
                 ma.dispSelec(dispositivos[i]);
-
-
             }
 
 
@@ -196,5 +230,40 @@ private DispositivoSeleccionado dispSelec;
         void onFragmentInteraction(Uri uri);
     }
 
+    private void searchAndSetAllNotifyAbleCharacteristics(BluetoothGatt lastBluetoothGatt) {
+        try {
 
+            if(lastBluetoothGatt!=null){
+                for(BluetoothGattService currentService: lastBluetoothGatt.getServices()){
+                    if(currentService!=null){
+                        for(BluetoothGattCharacteristic currentCharacteristic:currentService.getCharacteristics()){
+                            if(currentCharacteristic!=null){
+                                if(isCharacteristicNotifiable(currentCharacteristic)){
+                                    lastBluetoothGatt.setCharacteristicNotification(currentCharacteristic, true);
+                                    for(BluetoothGattDescriptor currentDescriptor:currentCharacteristic.getDescriptors()){
+                                        if(currentDescriptor!=null){
+                                            try {
+                                                currentDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+                                                lastBluetoothGatt.writeDescriptor(currentDescriptor);
+                                            }catch (Exception internalError){
+
+                                            }
+                                        }
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception error){
+
+        }
+
+    }
+
+    public boolean isCharacteristicNotifiable(BluetoothGattCharacteristic characteristic) {
+        return ((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0);
+    }
 }
