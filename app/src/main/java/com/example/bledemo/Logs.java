@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -65,7 +67,7 @@ public class Logs extends Fragment {
     }
     private View v;
     private ListView lv1;
-    String logs[];
+ArrayList<String>logs;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -73,15 +75,21 @@ public class Logs extends Fragment {
         v= inflater.inflate(R.layout.fragment_logs, container, false);
         lv1=v.findViewById(R.id.lsLogs);
 
-
+        Bundle datosRecuperados = getArguments();
+        logs = datosRecuperados.getStringArrayList("logs");
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, logs);
+        lv1.setAdapter(adapter);
 
 
 
 
         return v;
     }
-    void llenarLogs(String logs[]){
+    void llenarLogs(ArrayList<String> logs){
+        System.out.println(logs.toString());
+        System.out.println("ejecuta la funcion");
         if(lv1!=null) {
+            System.out.println("Entra al if");
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, logs);
             lv1.setAdapter(adapter);
         }
