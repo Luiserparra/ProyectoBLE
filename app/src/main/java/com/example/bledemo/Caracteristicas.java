@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.bledemo.ble.BLEManager;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -129,7 +130,7 @@ public class Caracteristicas extends Fragment {
                 transition.replace(R.id.contenedor, frInfoCaract);
                 transition.addToBackStack(null);
                 transition.commit();
-
+                ma.logs("Se ingresó a la información de la caracteristica "+caracteristica.getUuid().toString()+" "+new Date());
                 return false;
             }
         });

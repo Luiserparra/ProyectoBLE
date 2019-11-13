@@ -23,6 +23,7 @@ import com.example.bledemo.ble.BLEManager;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.UUID;
 
 
@@ -128,6 +129,7 @@ public class InfoCaracteristica extends Fragment {
                     }
                     builder.setMessage(ValorCaracteristica);
                     builder.show();
+                    ma.logs("Se leyó el valor de la caracteristica "+c.getUuid().toString()+" "+new Date());
                 }else {
                     if (i==2 && info[2].equals("W")){
                         AlertDialog.Builder builder =new AlertDialog.Builder(getActivity());
@@ -150,7 +152,7 @@ public class InfoCaracteristica extends Fragment {
                                 } catch (Exception e) {
 
                                 }
-
+                                ma.logs("Se escribió un nuevo valor a la caracteristica "+c.getUuid().toString()+" "+new Date());
                                 System.out.println("NUEVO VAL: "+nuevoVal);
                                 //SETEAR EL nuevoVal A LA CARACTERISTICA
                             }
@@ -164,6 +166,7 @@ public class InfoCaracteristica extends Fragment {
                         builder.setTitle("Nuevo valor");
 
                         builder.show();
+
                     }
                 }
 

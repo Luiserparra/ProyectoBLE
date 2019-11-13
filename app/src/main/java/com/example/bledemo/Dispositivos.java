@@ -23,6 +23,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.bledemo.ble.BLEManager;
 
+import java.util.Date;
+
 import static android.widget.Toast.LENGTH_LONG;
 
 
@@ -168,7 +170,7 @@ private DispositivoSeleccionado dispSelec;
                 transition.replace(R.id.contenedor, frServicios);
                 transition.addToBackStack(null);
                 transition.commit();
-
+                ma.logs("Se conecto a un dispositivo "+new Date());
 
             }
                 return false;

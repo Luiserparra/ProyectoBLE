@@ -40,6 +40,8 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.Date;
+
 public class MainActivity extends AppCompatActivity implements BLEManagerCallerInterface, Dispositivos.OnFragmentInteractionListener,
         Servicios.OnFragmentInteractionListener ,Caracteristicas.OnFragmentInteractionListener, InfoCaracteristica.OnFragmentInteractionListener ,Logs.OnFragmentInteractionListener{
 
@@ -93,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
                     System.out.println("INICIAR ESCANEO");
                     go();
                     bleManager.scanDevices();
+                    logs("Se inició un scaneo "+new Date());
                 }
             }
         });
@@ -109,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
                     System.out.println("DETENER ESCANEO");
                     transition.commit();*/
                     stop();
+                    logs("Se detuvo el scaneo "+new Date());
                 }
             }
         });
@@ -164,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
                         transition.addToBackStack(null);
                         transition.commit();
 
-
+                        logs("Se conecto a un dispositivo "+new Date());
                     }
                 }
             }
@@ -186,6 +190,7 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
                     transition.commit();
                     System.out.println("DESCONECTARSE");
                     bleManager.disconnectToGattServer();
+                    logs("Se desconecto de un dispositivo "+new Date());
                 }
             }
         });
@@ -203,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
                     transition.addToBackStack(null);
                     transition.commit();
                     System.out.println("SE ABRE EL LOG");
-
+                logs("Se revisaron los logs"+new Date());
 
             }
         });
@@ -236,7 +241,7 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
         transition.replace(R.id.contenedor,frDispositivos);
         transition.commit();
 */
-
+        logs("Se inició la aplicación"+new Date());
     }
 
     @Override

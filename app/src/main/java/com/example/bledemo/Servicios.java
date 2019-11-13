@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.bledemo.ble.BLEManager;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -139,7 +140,7 @@ public class Servicios extends Fragment {
                 transition.replace(R.id.contenedor, frCaracteristicas);
                 transition.addToBackStack(null);
                 transition.commit();
-
+                ma.logs("Se revisaron las caracteristicas del servicio "+servicios[i]+" "+new Date());
                 return false;
             }
         });
