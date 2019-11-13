@@ -42,6 +42,7 @@ import android.widget.Toast;
 
 import java.util.Date;
 
+
 public class MainActivity extends AppCompatActivity implements BLEManagerCallerInterface, Dispositivos.OnFragmentInteractionListener,
         Servicios.OnFragmentInteractionListener ,Caracteristicas.OnFragmentInteractionListener, InfoCaracteristica.OnFragmentInteractionListener ,Logs.OnFragmentInteractionListener{
 
