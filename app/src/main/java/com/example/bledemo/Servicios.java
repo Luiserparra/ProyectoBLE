@@ -137,6 +137,8 @@ public class Servicios extends Fragment {
                     caracteristicas[j] = carac;
                     j++;
                 }
+
+
                 datosAEnviar.putStringArray("caracteristicas", caracteristicas);
 
                 //Inicializar el fragment de caracteristicas y mandar los datos
