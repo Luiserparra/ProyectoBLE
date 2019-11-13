@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
+import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
@@ -24,6 +25,7 @@ import android.provider.Settings;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.example.bledemo.MainActivity;
 import com.example.bledemo.R;
 
 import java.util.ArrayList;
@@ -37,6 +39,8 @@ public class BLEManager extends ScanCallback {
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothLeScanner bluetoothLeScanner;
     public List<ScanResult> scanResults=new ArrayList<>();
+    public BluetoothGatt gatt = null;
+    public boolean sw = false;
 
     public BLEManager(BLEManagerCallerInterface caller, Context context) {
         this.caller = caller;
@@ -148,6 +152,10 @@ public class BLEManager extends ScanCallback {
 
     }
 
+    public void stopScanDevices(){
+        bluetoothLeScanner=bluetoothAdapter.getBluetoothLeScanner();
+        bluetoothLeScanner.stopScan(this);
+    }
     @Override
     public void onScanFailed(int errorCode) {
         caller.scanFailed(errorCode);
@@ -175,7 +183,7 @@ public class BLEManager extends ScanCallback {
 
     public void connectToGATTServer(BluetoothDevice device){
         try{
-            device.connectGatt(this.context, false, new BluetoothGattCallback() {
+            gatt = device.connectGatt(this.context, false, new BluetoothGattCallback() {
                 @Override
                 public void onPhyUpdate(BluetoothGatt gatt, int txPhy, int rxPhy, int status) {
                     super.onPhyUpdate(gatt, txPhy, rxPhy, status);
@@ -191,6 +199,7 @@ public class BLEManager extends ScanCallback {
                                                     int status, int newState) {
                     super.onConnectionStateChange(gatt, status, newState);
                     if(newState==BluetoothGatt.STATE_CONNECTED){
+                        sw = false;
                         gatt.discoverServices();
                     }
                 }
@@ -198,7 +207,36 @@ public class BLEManager extends ScanCallback {
                 @Override
                 public void onServicesDiscovered(BluetoothGatt gatt, int status) {
                     super.onServicesDiscovered(gatt, status);
-
+                    if (status == BluetoothGatt.GATT_SUCCESS) {
+                        List<BluetoothGattService> gattServices = gatt.getServices();
+                        System.out.println("LA CANTIDAD DE SERVICIOS FUERON "+gattServices.size());
+                        for (BluetoothGattService gattService : gattServices) {
+                            String serviceUUID = gattService.getUuid().toString();
+                            System.out.println(serviceUUID+ " Service UUID");
+                            List<BluetoothGattCharacteristic> gattCharacteristics = gattService.getCharacteristics();
+                            for (BluetoothGattCharacteristic gattCharacteristic: gattCharacteristics){
+                                String characteristicUUID = gattCharacteristic.getUuid().toString();
+                                System.out.println(characteristicUUID+ " Characteristic UUID");
+                                String characteristicProperties = "";
+                                if(isCharacteristicWriteable(gattCharacteristic)){
+                                    characteristicProperties = characteristicProperties + "W";
+                                }
+                                if(isCharacteristicReadable(gattCharacteristic)){
+                                    characteristicProperties = characteristicProperties + "R";
+                                }
+                                if(isCharacteristicNotifiable(gattCharacteristic)){
+                                    characteristicProperties = characteristicProperties + "N";
+                                }
+                                System.out.println(characteristicProperties);
+                                List<BluetoothGattDescriptor> gattDescriptors = gattCharacteristic.getDescriptors();
+                                for (BluetoothGattDescriptor gattDescriptor : gattDescriptors){
+                                    System.out.println(gattDescriptor.getUuid());
+                                }
+                            }
+                        }
+                        sw = true;
+                    } else {
+                    }
                 }
 
                 @Override
@@ -243,11 +281,42 @@ public class BLEManager extends ScanCallback {
             });
         }catch (Exception error){
 
+        }finally {
+
+        }
+    }
+    public void disconnectToGattServer(){
+        if(gatt != null){
+            gatt.disconnect();
+            gatt.close();
+            gatt = null;
         }
     }
     public void disable(){
         bluetoothAdapter.disable();
     }
 
+
+    public boolean isCharacteristicWriteable(BluetoothGattCharacteristic characteristic) {
+        return (characteristic.getProperties() &
+                (BluetoothGattCharacteristic.PROPERTY_WRITE
+                        | BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE)) != 0;
+    }
+
+    public boolean isCharacteristicReadable(BluetoothGattCharacteristic characteristic) {
+        return ((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_READ) != 0);
+    }
+
+    public boolean isCharacteristicNotifiable(BluetoothGattCharacteristic characteristic) {
+        return ((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0);
+    }
+
+    public BluetoothGatt getGatt(){
+        return gatt;
+    }
+
+    public boolean getSw(){
+        return sw;
+    }
 
 }

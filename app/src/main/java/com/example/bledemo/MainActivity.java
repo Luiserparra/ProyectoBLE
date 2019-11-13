@@ -41,23 +41,29 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
 
     public BLEManager bleManager;
     private MainActivity mainActivity;
-    public String [] Devices;
-    public volatile boolean run = true;
+    public String [] Devices = new String[1];
+    public String [] DevicesOld;
+    public volatile boolean run = false;
 
     public void go(){
         run = true;
-        hilo.start();
     }
     public void stop(){
+        bleManager.stopScanDevices();
         run = false;
     }
 
 
-String dispSelec="";
-public void dispSelec(String ds){
-    dispSelec=ds;
-
-}
+    String dispSelec="";
+    public void dispSelec(String ds){
+        dispSelec=ds;
+    }
+    String servicios[];
+    int p=0;
+    public void addServicio(String s){
+        servicios[p]=s;
+        p++;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,12 +77,8 @@ public void dispSelec(String ds){
             @Override
             public void onClick(View view) {
                 if(bleManager!=null){
-                    Dispositivos frDispositivos = new Dispositivos();
-                    FragmentTransaction transition =  getSupportFragmentManager().beginTransaction();
-                    transition.replace(R.id.contenedor,frDispositivos);
-                    transition.addToBackStack(null);
                     System.out.println("INICIAR ESCANEO");
-                    transition.commit();
+                    bleManager.scanDevices();
                     go();
                 }
             }
@@ -88,13 +90,12 @@ public void dispSelec(String ds){
             @Override
             public void onClick(View view) {
                 if(bleManager!=null){
-                    Dispositivos frDispositivos = new Dispositivos();
+                    /*Dispositivos frDispositivos = new Dispositivos();
                     FragmentTransaction transition =  getSupportFragmentManager().beginTransaction();
                     transition.replace(R.id.contenedor,frDispositivos);
                     System.out.println("DETENER ESCANEO");
-                    transition.commit();
+                    transition.commit();*/
                     stop();
-                    System.out.println("Mate a potter :'(");
                 }
             }
         });
@@ -109,9 +110,32 @@ public void dispSelec(String ds){
                     if (!dispSelec.equals("")) {
                         //Guardar el dispositivo seleccionado
                         Bundle datosAEnviar = new Bundle();
+                        String[]dispSelecV = dispSelec.split(" ");
+                        int sw = 0;
+                        for(int i = 0; i<dispSelecV.length;i++){
+                            if(dispSelecV[i].equals("Device:")){
+                                sw = i+1;
+                                break;
+                            }
+                        }
+                        dispSelec = dispSelecV[sw];
                         datosAEnviar.putString("dispositivo", dispSelec);
+                        BluetoothDevice device = null;
+                        for(ScanResult sr : bleManager.scanResults){
+                            if (sr.getDevice().getName()!=null) {
+                                if (sr.getDevice().toString().equals(dispSelec)) {
+                                    device = sr.getDevice();
+                                }
+                            }
+                        }
+                        bleManager.connectToGATTServer(device);
+                        while(!bleManager.getSw()){}
                         //LLenar el array de servicios con los servicios del dispositivo seleccionado
-                        String servicios[] = {"Servicio 1", " Servicio 2", "Servicio 3"};
+
+                         servicios = new String[bleManager.getGatt().getServices().size()];
+                        for (int i = 0; i<servicios.length;i++){
+                            servicios[i] = bleManager.getGatt().getServices().get(i).getUuid().toString();
+                        }
                         datosAEnviar.putStringArray("servicios", servicios);
 
                         System.out.println("CONECTARSE");
@@ -125,15 +149,7 @@ public void dispSelec(String ds){
                         transition.replace(R.id.contenedor, frServicios);
                         transition.addToBackStack(null);
                         transition.commit();
-                        BluetoothDevice device = null;
-                        for(ScanResult sr : bleManager.scanResults){
-                            if (sr.getDevice().getName()!=null) {
-                                if (sr.getDevice().getName().equals("Galaxy S7 edge")) {
-                                    device = sr.getDevice();
-                                }
-                            }
-                        }
-                        bleManager.connectToGATTServer(device);
+
 
                     }
                 }
@@ -146,11 +162,15 @@ public void dispSelec(String ds){
             @Override
             public void onClick(View view) {
                 if(bleManager!=null){
-                    Dispositivos frDispositivos = new Dispositivos();
+                    Bundle datosAEnviar = new Bundle();
+                    datosAEnviar.putStringArray("Devices", Devices);
                     FragmentTransaction transition =  getSupportFragmentManager().beginTransaction();
+                    Dispositivos frDispositivos = new Dispositivos();
+                    frDispositivos.setArguments(datosAEnviar);
                     transition.replace(R.id.contenedor,frDispositivos);
                     transition.commit();
                     System.out.println("DESCONECTARSE");
+                    bleManager.disconnectToGattServer();
                 }
             }
         });
@@ -172,7 +192,7 @@ public void dispSelec(String ds){
         registerReceiver(mReceiver, filter);
         //Deshabilitar el BLE
         //bleManager.disable();
-
+/*
         Bundle datosAEnviar = new Bundle();
         System.out.println("DISPOSITIVOOOS"+Devices);
         datosAEnviar.putStringArray("Devices", Devices);
@@ -182,7 +202,7 @@ public void dispSelec(String ds){
         frDispositivos.setArguments(datosAEnviar);
         transition.replace(R.id.contenedor,frDispositivos);
         transition.commit();
-
+*/
 
     }
 
@@ -304,12 +324,22 @@ public void dispSelec(String ds){
                         ListView listView = (ListView) findViewById(R.id.devices_list_id);
                         BluetoothDeviceListAdapter adapter = new BluetoothDeviceListAdapter(getApplicationContext(), bleManager.scanResults, mainActivity);
                         listView.setAdapter(adapter);
+                        DevicesOld = Devices;
                         Devices = new String[adapter.scanResultList.size()];
                         for (int i = 0; i < adapter.scanResultList.size(); i++) {
-                            String d = "Device: " + adapter.scanResultList.get(i).getDevice() + "; " + "Device Name: " + adapter.scanResultList.get(i).getDevice().getName() + "; " + "Signal: " + adapter.scanResultList.get(i).getRssi() + "dBm";
-                            Devices[i] = d;
-                            System.out.println(d);
+                            String d = "Device Name: " + adapter.scanResultList.get(i).getDevice().getName() +"  Device: " + adapter.scanResultList.get(i).getDevice() +"  Signal: " + adapter.scanResultList.get(i).getRssi() + "dBm";
+                                Devices[i] = d;
+                                System.out.println(d);
                         }
+                            Bundle datosAEnviar = new Bundle();
+                            datosAEnviar.putStringArray("Devices", Devices);
+                            FragmentTransaction transition =  getSupportFragmentManager().beginTransaction();
+                            Dispositivos frDispositivos = new Dispositivos();
+                            frDispositivos.setArguments(datosAEnviar);
+                            transition.replace(R.id.contenedor,frDispositivos);
+                            transition.commit();
+
+
                     }
 //                    ListView listView=(ListView)findViewById(R.id.devices_list_id);
      //               BluetoothDeviceListAdapter adapter=new BluetoothDeviceListAdapter(getApplicationContext(),bleManager.scanResults,mainActivity);
@@ -356,20 +386,18 @@ public void dispSelec(String ds){
     public void onFragmentInteraction(Uri uri) {
 
     }
-    Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            while (run) {
-                try {
-                    System.out.println("Me imprimo cada 5 segundos");
-                    bleManager.scanDevices();
-                    Thread.sleep(5000);
-                    System.out.println("EL valor de Run es "+run);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+
+
+    public boolean alreadyExists(String[]a, String s){
+        for (int i = 0; i<a.length;i++){
+            if(a[i].equals(s)){
+                return true;
             }
         }
-    };
-    Thread hilo = new Thread(runnable);
+        return false;
+    }
+
+    public BLEManager getBleManager() {
+        return bleManager;
+    }
 }

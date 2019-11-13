@@ -14,6 +14,8 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.bledemo.ble.BLEManager;
+
 import static android.widget.Toast.LENGTH_LONG;
 
 
@@ -80,10 +82,14 @@ public class Dispositivos extends Fragment {
     boolean conectado=true;
     public String a;
     private View v;
-private Dispositivos lisener;
-public interface DispositivoSeleccionado{
-    void onInputASent(String dispositivo);
-}
+    private Dispositivos lisener;
+    public interface DispositivoSeleccionado{
+        void onInputASent(String dispositivo);
+    }
+
+    public void dispSelec(String servicio){
+        servicio=servicio;
+    }
 private DispositivoSeleccionado dispSelec;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -94,11 +100,15 @@ private DispositivoSeleccionado dispSelec;
         lv1=v.findViewById(R.id.lsDispositivos);
         //Recibir datos
         Bundle datosRecuperados = getArguments();
-       // dispositivos = datosRecuperados.getStringArray("Devices");
-        //LLenar la lista de dispositivos
+            dispositivos = datosRecuperados.getStringArray("Devices");
+            //LLenar la lista de dispositivos
+        if(dispositivos==null){
+            dispositivos=new String[1];
+        }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, dispositivos);
         lv1.setAdapter(adapter);
         System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+
         lv1.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -130,8 +140,8 @@ private DispositivoSeleccionado dispSelec;
         lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-MainActivity ma= (MainActivity)getActivity();
-               ma.dispSelec(dispositivos[i]);
+                MainActivity ma= (MainActivity)getActivity();
+                ma.dispSelec(dispositivos[i]);
 
 
             }
@@ -184,4 +194,6 @@ MainActivity ma= (MainActivity)getActivity();
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+
 }

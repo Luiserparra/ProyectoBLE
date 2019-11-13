@@ -109,7 +109,7 @@ public class InfoCaracteristica extends Fragment {
                     builder.setMessage(ValorCaracteristica);
                     builder.show();
                 }else {
-                    if (i==2 && info[2].equals("Ediable")){
+                    if (i==2 && info[2].equals("Editable")){
                         AlertDialog.Builder builder =new AlertDialog.Builder(getActivity());
                         LayoutInflater inflater1 =getActivity().getLayoutInflater();
                         View view1=inflater1.inflate(R.layout.write_dialog,null);
