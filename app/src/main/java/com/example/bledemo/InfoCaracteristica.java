@@ -95,7 +95,7 @@ public class InfoCaracteristica extends Fragment {
         lv1.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if (i==1 && info[1].equals("Leible")){
+                if (i==1 && info[1].equals("R")){
                     //POP UP PARA LEER LA CARACTERISTICA
                     AlertDialog.Builder builder =new AlertDialog.Builder(getActivity());
                     builder.setCancelable(true);
@@ -109,7 +109,7 @@ public class InfoCaracteristica extends Fragment {
                     builder.setMessage(ValorCaracteristica);
                     builder.show();
                 }else {
-                    if (i==2 && info[2].equals("Editable")){
+                    if (i==2 && info[2].equals("W")){
                         AlertDialog.Builder builder =new AlertDialog.Builder(getActivity());
                         LayoutInflater inflater1 =getActivity().getLayoutInflater();
                         View view1=inflater1.inflate(R.layout.write_dialog,null);

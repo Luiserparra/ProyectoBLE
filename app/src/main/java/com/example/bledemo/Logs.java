@@ -3,28 +3,25 @@ package com.example.bledemo;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+
+import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link Caracteristicas.OnFragmentInteractionListener} interface
+ * {@link Logs.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link Caracteristicas#newInstance} factory method to
+ * Use the {@link Logs#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Caracteristicas extends Fragment {
+public class Logs extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -36,7 +33,7 @@ public class Caracteristicas extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public Caracteristicas() {
+    public Logs() {
         // Required empty public constructor
     }
 
@@ -46,11 +43,11 @@ public class Caracteristicas extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment Caracteristicas.
+     * @return A new instance of fragment Logs.
      */
     // TODO: Rename and change types and number of parameters
-    public static Caracteristicas newInstance(String param1, String param2) {
-        Caracteristicas fragment = new Caracteristicas();
+    public static Logs newInstance(String param1, String param2) {
+        Logs fragment = new Logs();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -66,68 +63,28 @@ public class Caracteristicas extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
-    private ListView lv1;
-    private TextView tv1;
-    private String caracteristicas[];
-
     private View v;
+    private ListView lv1;
+    String logs[];
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        v=inflater.inflate(R.layout.fragment_caracteristicas, container, false);
-        lv1=v.findViewById(R.id.lsCaracteristicas);
-        tv1=v.findViewById(R.id.txtCaracteristicas);
-        System.out.println("TV1 = "+tv1);
-
-        //Recibir datos
-        Bundle datosRecuperados = getArguments();
-        String servicio = datosRecuperados.getString("servicio");
-        caracteristicas= datosRecuperados.getStringArray("caracteristicas");
-        tv1.setText("Caracteristicas de "+servicio);
-
-        //LLenar la lista de Caracteristicas
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, caracteristicas);
-        lv1.setAdapter(adapter);
-        lv1.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+        lv1=v.findViewById(R.id.lsLogs);
+        v= inflater.inflate(R.layout.fragment_logs, container, false);
 
 
-                //Guardar caracteristica seleccionada
-                Bundle datosAEnviar = new Bundle();
-                datosAEnviar.putString("caracteristica", caracteristicas[i]);
 
-                //Eniar la caracteristica seleccionada
-                String ClaseCaract = "";//supongo que la caracteristica es una clase y se puede enviar como un dato
-                datosAEnviar.putString("ClaseCaract", ClaseCaract);
 
-                //LLenar el array la info de la catacertistica seleccionada
-                String UUID="12345";
-                String Re="Leible";
-                String W="Ediable";
-                String N="N";
-                String descriptor="Descripcion";
-                String info[]={"UUIDS: "+UUID,Re,W,N,"Descripción: "+descriptor };
-                datosAEnviar.putStringArray("info", info);
 
-                //Inicializar el fragment de caracteristicas y mandar los datos
-                InfoCaracteristica frInfoCaract = new InfoCaracteristica();
-                frInfoCaract.setArguments(datosAEnviar);
-
-                //Cambiar de fragment
-                FragmentTransaction transition = getFragmentManager().beginTransaction();
-                transition.replace(R.id.contenedor, frInfoCaract);
-                transition.addToBackStack(null);
-                transition.commit();
-
-                return false;
-            }
-        });
         return v;
     }
-
+    void llenarLogs(String logs[]){
+        if(lv1!=null) {
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, logs);
+            lv1.setAdapter(adapter);
+        }
+    }
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {

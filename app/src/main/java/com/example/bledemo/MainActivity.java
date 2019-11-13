@@ -37,12 +37,15 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements BLEManagerCallerInterface, Dispositivos.OnFragmentInteractionListener,
-        Servicios.OnFragmentInteractionListener ,Caracteristicas.OnFragmentInteractionListener, InfoCaracteristica.OnFragmentInteractionListener {
+        Servicios.OnFragmentInteractionListener ,Caracteristicas.OnFragmentInteractionListener, InfoCaracteristica.OnFragmentInteractionListener ,Logs.OnFragmentInteractionListener{
 
     public BLEManager bleManager;
     private MainActivity mainActivity;
     public String [] Devices = new String[1];
     public String [] DevicesOld;
+    public String logs[];
+    Logs frLogs= new Logs();
+
     public volatile boolean run = false;
 
     public void go(){
@@ -57,6 +60,12 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
     String dispSelec="";
     public void dispSelec(String ds){
         dispSelec=ds;
+    }
+    int c=0;
+    public void logs(String log){
+        logs[c]=log;
+        c++;
+        frLogs.llenarLogs(logs);
     }
     String servicios[];
     int p=0;
@@ -166,12 +175,30 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
                     datosAEnviar.putStringArray("Devices", Devices);
                     FragmentTransaction transition =  getSupportFragmentManager().beginTransaction();
                     Dispositivos frDispositivos = new Dispositivos();
+
                     frDispositivos.setArguments(datosAEnviar);
                     transition.replace(R.id.contenedor,frDispositivos);
                     transition.commit();
                     System.out.println("DESCONECTARSE");
                     bleManager.disconnectToGattServer();
                 }
+            }
+        });
+
+
+        //BOTON DE LOGS
+        FloatingActionButton logs = (FloatingActionButton) findViewById(R.id.fab5);
+        desconectarse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                    FragmentTransaction transition =  getSupportFragmentManager().beginTransaction();
+                    Logs frLogs = new Logs();
+                    transition.replace(R.id.contenedor,frLogs);
+                    transition.addToBackStack(null);
+                    transition.commit();
+                    System.out.println("SE ABRE EL LOG");
+
+
             }
         });
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {

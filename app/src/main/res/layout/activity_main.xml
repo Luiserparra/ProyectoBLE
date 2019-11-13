@@ -73,18 +73,29 @@
 
         </com.getbase.floatingactionbutton.FloatingActionButton>
         <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab4"
+        android:id="@+id/fab4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fab_icon="@android:drawable/ic_input_delete"
+        app:fab_size="mini"
+        app:fab_colorNormal="#FF5722"
+        app:fab_colorPressed="@android:color/darker_gray"
+        app:fab_title="Desconectarse del dispositivo BLE"
+        >
+
+    </com.getbase.floatingactionbutton.FloatingActionButton>
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:fab_icon="@android:drawable/ic_input_delete"
+            app:fab_icon="@android:drawable/ic_dialog_info"
             app:fab_size="mini"
             app:fab_colorNormal="#FF5722"
             app:fab_colorPressed="@android:color/darker_gray"
-            app:fab_title="Desconectarse del dispositivo BLE"
+            app:fab_title="LOGS"
             >
 
         </com.getbase.floatingactionbutton.FloatingActionButton>
-
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
 
