@@ -40,8 +40,7 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.util.Date;
-
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements BLEManagerCallerInterface, Dispositivos.OnFragmentInteractionListener,
         Servicios.OnFragmentInteractionListener ,Caracteristicas.OnFragmentInteractionListener, InfoCaracteristica.OnFragmentInteractionListener ,Logs.OnFragmentInteractionListener{
@@ -50,7 +49,8 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
     private MainActivity mainActivity;
     public String [] Devices = new String[1];
     public String [] DevicesOld;
-    public String logs[];
+    public ArrayList<String> logsArray= new ArrayList();
+    public String logs[]= new String[100];
     Logs frLogs= new Logs();
 
     public volatile boolean run = false;
@@ -70,9 +70,10 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
     }
     int c=0;
     public void logs(String log){
-        logs[c]=log;
-        c++;
-        frLogs.llenarLogs(logs);
+        logsArray.add(log);
+
+
+        frLogs.llenarLogs(logsArray);
     }
     String servicios[];
     int p=0;
@@ -201,10 +202,13 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
             public void onClick(View view) {
                 Logs frLogs = new Logs();
                     FragmentTransaction transition =  getSupportFragmentManager().beginTransaction();
-
-                    transition.replace(R.id.contenedor,frLogs);
+                Bundle datosAEnviar = new Bundle();
+                datosAEnviar.putStringArrayList("logs",logsArray);
+                transition.replace(R.id.contenedor,frLogs);
                     transition.addToBackStack(null);
-                    transition.commit();
+                frLogs.setArguments(datosAEnviar);
+                transition.commit();
+                    logs("L1");
                     System.out.println("SE ABRE EL LOG");
 
 
