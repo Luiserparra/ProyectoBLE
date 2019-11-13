@@ -243,8 +243,6 @@ public class BLEManager extends ScanCallback {
                 @Override
                 public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
                     super.onCharacteristicRead(gatt, characteristic, status);
-                    int lsb = characteristic.getValue()[0] & 0xff;
-                    System.out.println(lsb);
                     sw2 = true;
                 }
 

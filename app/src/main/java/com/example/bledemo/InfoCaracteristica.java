@@ -121,9 +121,9 @@ public class InfoCaracteristica extends Fragment {
                     System.out.println("La caracteristica fue "+c.getUuid().toString());
                     bleManager.setSw2(false);
                     bleManager.getGatt().readCharacteristic(c);
-                    //while(!bleManager.getSw2()){}
-                    //int lsb = c.getValue()[0] & 0xff;
-                    //ValorCaracteristica = String.valueOf(lsb);
+                    while(!bleManager.getSw2()){}
+                    int lsb = c.getValue()[0] & 0xff;
+                    ValorCaracteristica = String.valueOf(lsb);
                     builder.setMessage(ValorCaracteristica);
                     builder.show();
                 }else {
