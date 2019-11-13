@@ -124,7 +124,7 @@ public class InfoCaracteristica extends Fragment {
                     bleManager.getGatt().readCharacteristic(c);
                     while(!bleManager.getSw2()){}
                     for(int j =0;j<c.getValue().length;j++){
-                        ValorCaracteristica = ValorCaracteristica + " / "+ (c.getValue()[i] & 0xff);
+                        ValorCaracteristica = ValorCaracteristica + " / "+ String.format("%02X",c.getValue()[j]);
                     }
                     builder.setMessage(ValorCaracteristica);
                     builder.show();
@@ -134,13 +134,23 @@ public class InfoCaracteristica extends Fragment {
                         LayoutInflater inflater1 =getActivity().getLayoutInflater();
                         View view1=inflater1.inflate(R.layout.write_dialog,null);
                         nuevoValET=view1.findViewById(R.id.nuevoVal);
-
                         builder.setCancelable(true);
                         builder.setView(view1);
                         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 final String nuevoVal=nuevoValET.getText().toString();
+                                MainActivity ma = (MainActivity)getActivity();
+                                BLEManager bleManager = ma.getBleManager();
+                                BluetoothGattCharacteristic c = bleManager.getGatt().getService(UUID.fromString(servicio)).getCharacteristic(UUID.fromString(caracteristica));
+                                try {
+                                    byte[] myBytes = nuevoVal.getBytes("UTF-8");
+                                    c.setValue(myBytes);
+                                    bleManager.getGatt().writeCharacteristic(c);
+                                } catch (UnsupportedEncodingException e) {
+
+                                }
+
                                 System.out.println("NUEVO VAL: "+nuevoVal);
                                 //SETEAR EL nuevoVal A LA CARACTERISTICA
                             }
