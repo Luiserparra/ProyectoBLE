@@ -70,8 +70,9 @@ public class Logs extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        lv1=v.findViewById(R.id.lsLogs);
         v= inflater.inflate(R.layout.fragment_logs, container, false);
+        lv1=v.findViewById(R.id.lsLogs);
+
 
 
 

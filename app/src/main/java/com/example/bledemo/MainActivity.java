@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
                         String[]dispSelecV = dispSelec.split(" ");
                         int sw = 0;
                         for(int i = 0; i<dispSelecV.length;i++){
-                            if(dispSelecV[i].equals("Device:")){
+                            if(dispSelecV[i].equals("MAC:")){
                                 sw = i+1;
                                 break;
                             }
@@ -193,11 +193,12 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
 
         //BOTON DE LOGS
         FloatingActionButton logs = (FloatingActionButton) findViewById(R.id.fab5);
-        desconectarse.setOnClickListener(new View.OnClickListener() {
+        logs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Logs frLogs = new Logs();
                     FragmentTransaction transition =  getSupportFragmentManager().beginTransaction();
-                    Logs frLogs = new Logs();
+
                     transition.replace(R.id.contenedor,frLogs);
                     transition.addToBackStack(null);
                     transition.commit();
@@ -358,10 +359,16 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
                         listView.setAdapter(adapter);
                         DevicesOld = Devices;
                         Devices = new String[adapter.scanResultList.size()];
+                        String d;
                         for (int i = 0; i < adapter.scanResultList.size(); i++) {
-                            String d = "Device Name: " + adapter.scanResultList.get(i).getDevice().getName() +"  Device: " + adapter.scanResultList.get(i).getDevice() +"  Signal: " + adapter.scanResultList.get(i).getRssi() + "dBm";
-                                Devices[i] = d;
-                                System.out.println(d);
+                            if (!adapter.scanResultList.get(i).getDevice().getName().equals("null")) {
+                                 d = "Nombre: " + adapter.scanResultList.get(i).getDevice().getName() + "  MAC: " + adapter.scanResultList.get(i).getDevice() + "  Señal: " + adapter.scanResultList.get(i).getRssi() + "dBm";
+                            }else{
+                                 d = "MAC: " + adapter.scanResultList.get(i).getDevice() + "  Señal: " + adapter.scanResultList.get(i).getRssi() + "dBm";
+
+                            }
+                            Devices[i] = d;
+                            System.out.println(d);
                         }
                             Bundle datosAEnviar = new Bundle();
                             datosAEnviar.putStringArray("Devices", Devices);
