@@ -110,12 +110,8 @@ public class Caracteristicas extends Fragment {
                 BLEManager bleManager = ma.getBleManager();
                 BluetoothGattService s = bleManager.getGatt().getService(UUID.fromString(servicio));
                 List<BluetoothGattCharacteristic> c = s.getCharacteristics();
-                BluetoothGattCharacteristic caracteristica = null;
-                for (BluetoothGattCharacteristic cc : c){
-                    if(cc.getUuid().toString().equals(caracteristicas[i])){
-                        caracteristica = cc;
-                    }
-                }
+                caracteristicas[i]= caracteristicas[i].substring(0,caracteristicas[i].length()-1);
+                BluetoothGattCharacteristic caracteristica = s.getCharacteristic(UUID.fromString(caracteristicas[i]));
                 //LLenar el array la info de la catacertistica seleccionada
                 String UUID=caracteristica.getUuid().toString();
                 String Re=(isCharacteristicReadable(caracteristica))?"R":"";
