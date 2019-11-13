@@ -91,8 +91,8 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
             public void onClick(View view) {
                 if(bleManager!=null){
                     System.out.println("INICIAR ESCANEO");
-                    bleManager.scanDevices();
                     go();
+                    bleManager.scanDevices();
                 }
             }
         });
@@ -357,28 +357,25 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
                         ListView listView = (ListView) findViewById(R.id.devices_list_id);
                         BluetoothDeviceListAdapter adapter = new BluetoothDeviceListAdapter(getApplicationContext(), bleManager.scanResults, mainActivity);
                         listView.setAdapter(adapter);
-                        DevicesOld = Devices;
                         Devices = new String[adapter.scanResultList.size()];
                         String d;
                         for (int i = 0; i < adapter.scanResultList.size(); i++) {
-                            if (!adapter.scanResultList.get(i).getDevice().getName().equals("null")) {
+                            //if (!adapter.scanResultList.get(i).getDevice().getName().equals("null")) {
                                  d = "Nombre: " + adapter.scanResultList.get(i).getDevice().getName() + "  MAC: " + adapter.scanResultList.get(i).getDevice() + "  Señal: " + adapter.scanResultList.get(i).getRssi() + "dBm";
-                            }else{
+                           /* }else{
                                  d = "MAC: " + adapter.scanResultList.get(i).getDevice() + "  Señal: " + adapter.scanResultList.get(i).getRssi() + "dBm";
 
-                            }
+                            }*/
                             Devices[i] = d;
                             System.out.println(d);
                         }
                             Bundle datosAEnviar = new Bundle();
                             datosAEnviar.putStringArray("Devices", Devices);
-                            FragmentTransaction transition =  getSupportFragmentManager().beginTransaction();
+                            FragmentTransaction transition = getSupportFragmentManager().beginTransaction();
                             Dispositivos frDispositivos = new Dispositivos();
                             frDispositivos.setArguments(datosAEnviar);
-                            transition.replace(R.id.contenedor,frDispositivos);
+                            transition.replace(R.id.contenedor, frDispositivos);
                             transition.commit();
-
-
                     }
 //                    ListView listView=(ListView)findViewById(R.id.devices_list_id);
      //               BluetoothDeviceListAdapter adapter=new BluetoothDeviceListAdapter(getApplicationContext(),bleManager.scanResults,mainActivity);

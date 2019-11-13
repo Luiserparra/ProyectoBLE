@@ -105,6 +105,7 @@ private DispositivoSeleccionado dispSelec;
         if(dispositivos==null){
             dispositivos=new String[1];
         }
+        System.out.println("LOS DISPOSITIVOS SON "+ dispositivos.length);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, dispositivos);
         lv1.setAdapter(adapter);
         System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");

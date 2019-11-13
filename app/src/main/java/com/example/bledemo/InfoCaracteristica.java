@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.example.bledemo.ble.BLEManager;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -122,8 +123,9 @@ public class InfoCaracteristica extends Fragment {
                     bleManager.setSw2(false);
                     bleManager.getGatt().readCharacteristic(c);
                     while(!bleManager.getSw2()){}
-                    int lsb = c.getValue()[0] & 0xff;
-                    ValorCaracteristica = String.valueOf(lsb);
+                    for(int j =0;j<c.getValue().length;j++){
+                        ValorCaracteristica = ValorCaracteristica + " / "+ (c.getValue()[i] & 0xff);
+                    }
                     builder.setMessage(ValorCaracteristica);
                     builder.show();
                 }else {
