@@ -147,7 +147,7 @@ public class InfoCaracteristica extends Fragment {
                                     byte[] myBytes = nuevoVal.getBytes("UTF-8");
                                     c.setValue(myBytes);
                                     bleManager.getGatt().writeCharacteristic(c);
-                                } catch (UnsupportedEncodingException e) {
+                                } catch (Exception e) {
 
                                 }
 
