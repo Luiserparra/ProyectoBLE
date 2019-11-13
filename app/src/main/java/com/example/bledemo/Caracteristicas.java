@@ -1,5 +1,7 @@
 package com.example.bledemo;
 
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattService;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,6 +16,11 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.example.bledemo.ble.BLEManager;
+
+import java.util.List;
+import java.util.UUID;
 
 
 /**
@@ -70,6 +77,7 @@ public class Caracteristicas extends Fragment {
     private ListView lv1;
     private TextView tv1;
     private String caracteristicas[];
+    String servicio="";
 
     private View v;
     @Override
@@ -83,7 +91,7 @@ public class Caracteristicas extends Fragment {
 
         //Recibir datos
         Bundle datosRecuperados = getArguments();
-        String servicio = datosRecuperados.getString("servicio");
+        servicio = datosRecuperados.getString("servicio");
         caracteristicas= datosRecuperados.getStringArray("caracteristicas");
         tv1.setText("Caracteristicas de "+servicio);
 
@@ -98,18 +106,22 @@ public class Caracteristicas extends Fragment {
                 //Guardar caracteristica seleccionada
                 Bundle datosAEnviar = new Bundle();
                 datosAEnviar.putString("caracteristica", caracteristicas[i]);
-
-                //Eniar la caracteristica seleccionada
-                String ClaseCaract = "";//supongo que la caracteristica es una clase y se puede enviar como un dato
-                datosAEnviar.putString("ClaseCaract", ClaseCaract);
-
+                MainActivity ma = (MainActivity)getActivity();
+                BLEManager bleManager = ma.getBleManager();
+                BluetoothGattService s = bleManager.getGatt().getService(UUID.fromString(servicio));
+                List<BluetoothGattCharacteristic> c = s.getCharacteristics();
+                BluetoothGattCharacteristic caracteristica = null;
+                for (BluetoothGattCharacteristic cc : c){
+                    if(cc.getUuid().toString().equals(caracteristicas[i])){
+                        caracteristica = cc;
+                    }
+                }
                 //LLenar el array la info de la catacertistica seleccionada
-                String UUID="12345";
-                String Re="Leible";
-                String W="Ediable";
-                String N="N";
-                String descriptor="Descripcion";
-                String info[]={"UUIDS: "+UUID,Re,W,N,"Descripción: "+descriptor };
+                String UUID=caracteristica.getUuid().toString();
+                String Re=(isCharacteristicReadable(caracteristica))?"R":"";
+                String W=(isCharacteristicWriteable(caracteristica))?"W":"";
+                String N=(isCharacteristicNotifiable(caracteristica))?"N":"";;
+                String info[]={"UUIDS: "+UUID,Re,W,N};
                 datosAEnviar.putStringArray("info", info);
 
                 //Inicializar el fragment de caracteristicas y mandar los datos
@@ -165,5 +177,19 @@ public class Caracteristicas extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public boolean isCharacteristicWriteable(BluetoothGattCharacteristic characteristic) {
+        return (characteristic.getProperties() &
+                (BluetoothGattCharacteristic.PROPERTY_WRITE
+                        | BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE)) != 0;
+    }
+
+    public boolean isCharacteristicReadable(BluetoothGattCharacteristic characteristic) {
+        return ((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_READ) != 0);
+    }
+
+    public boolean isCharacteristicNotifiable(BluetoothGattCharacteristic characteristic) {
+        return ((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0);
     }
 }

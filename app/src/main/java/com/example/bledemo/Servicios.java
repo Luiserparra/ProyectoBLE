@@ -125,22 +125,11 @@ public class Servicios extends Fragment {
                 for (BluetoothGattCharacteristic c : characteristics){
                     String carac;
                     carac = c.getUuid().toString()+" ";
-                    if(isCharacteristicReadable(c)){
-                        carac = carac + "R";
-                    }
-                    if(isCharacteristicWriteable(c)){
-                        carac = carac + "W";
-                    }
-                    if(isCharacteristicNotifiable(c)){
-                        carac = carac + "N";
-                    }
                     caracteristicas[j] = carac;
                     j++;
                 }
 
-
                 datosAEnviar.putStringArray("caracteristicas", caracteristicas);
-
                 //Inicializar el fragment de caracteristicas y mandar los datos
                 Caracteristicas frCaracteristicas = new Caracteristicas();
                 frCaracteristicas.setArguments(datosAEnviar);
