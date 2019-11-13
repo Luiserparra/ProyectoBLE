@@ -4,6 +4,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattDescriptor;
+import android.bluetooth.BluetoothGattService;
 import android.bluetooth.le.ScanResult;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -145,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
                         for (int i = 0; i<servicios.length;i++){
                             servicios[i] = bleManager.getGatt().getServices().get(i).getUuid().toString();
                         }
+                        searchAndSetAllNotifyAbleCharacteristics(bleManager.getGatt());
                         datosAEnviar.putStringArray("servicios", servicios);
 
                         System.out.println("CONECTARSE");
@@ -426,5 +431,42 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
 
     public BLEManager getBleManager() {
         return bleManager;
+    }
+
+    private void searchAndSetAllNotifyAbleCharacteristics(BluetoothGatt lastBluetoothGatt) {
+        try {
+
+            if(lastBluetoothGatt!=null){
+                for(BluetoothGattService currentService: lastBluetoothGatt.getServices()){
+                    if(currentService!=null){
+                        for(BluetoothGattCharacteristic currentCharacteristic:currentService.getCharacteristics()){
+                            if(currentCharacteristic!=null){
+                                if(isCharacteristicNotifiable(currentCharacteristic)){
+                                    lastBluetoothGatt.setCharacteristicNotification(currentCharacteristic, true);
+                                    for(BluetoothGattDescriptor currentDescriptor:currentCharacteristic.getDescriptors()){
+                                        if(currentDescriptor!=null){
+                                            try {
+                                                currentDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+                                                lastBluetoothGatt.writeDescriptor(currentDescriptor);
+                                            }catch (Exception internalError){
+
+                                            }
+                                        }
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception error){
+
+        }
+
+    }
+
+    public boolean isCharacteristicNotifiable(BluetoothGattCharacteristic characteristic) {
+        return ((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0);
     }
 }

@@ -252,6 +252,7 @@ public class BLEManager extends ScanCallback {
                 @Override
                 public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
                     super.onCharacteristicChanged(gatt, characteristic);
+                    System.out.println("Cambiaste algo");
                 }
 
                 @Override
