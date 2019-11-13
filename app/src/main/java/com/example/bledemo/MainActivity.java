@@ -41,6 +41,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements BLEManagerCallerInterface, Dispositivos.OnFragmentInteractionListener,
         Servicios.OnFragmentInteractionListener ,Caracteristicas.OnFragmentInteractionListener, InfoCaracteristica.OnFragmentInteractionListener ,Logs.OnFragmentInteractionListener{
@@ -87,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        logs("Se inicio la aplicacion "+new Date());
         //BOTON DE INICIAR ESCANEO
         FloatingActionButton iniciarScan = (FloatingActionButton) findViewById(R.id.fab1);
         iniciarScan.setOnClickListener(new View.OnClickListener() {
@@ -97,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
                     System.out.println("INICIAR ESCANEO");
                     go();
                     bleManager.scanDevices();
+                    logs("Se inicio el escaneo "+new Date());
                 }
             }
         });
@@ -113,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
                     System.out.println("DETENER ESCANEO");
                     transition.commit();*/
                     stop();
+                    logs("Se detuvo el escaneo "+new Date());
                 }
             }
         });
@@ -167,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
                         transition.replace(R.id.contenedor, frServicios);
                         transition.addToBackStack(null);
                         transition.commit();
-
+                        logs("Se conecto al dispositivo "+dispSelec+" "+new Date());
 
                     }
                 }
@@ -190,6 +193,7 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
                     transition.commit();
                     System.out.println("DESCONECTARSE");
                     bleManager.disconnectToGattServer();
+                    logs("Se realizó una desconexión "+new Date());
                 }
             }
         });
@@ -208,9 +212,8 @@ public class MainActivity extends AppCompatActivity implements BLEManagerCallerI
                     transition.addToBackStack(null);
                 frLogs.setArguments(datosAEnviar);
                 transition.commit();
-                    logs("L1");
                     System.out.println("SE ABRE EL LOG");
-
+                logs("Se revisaron los logs "+new Date());
 
             }
         });
